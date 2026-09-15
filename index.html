@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌟 八年級自然科魔法測驗 🌟</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
+        
+        body { 
+            font-family: 'Nunito', 'Noto Sans TC', sans-serif; 
+            background-color: #f0fdf4; /* Very light cute green */
+            background-image: radial-gradient(#dcfce7 2px, transparent 2px);
+            background-size: 30px 30px;
+        }
+        
+        .bouncy { transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .bouncy:active { transform: scale(0.96); }
+        
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { 
+            0% { opacity: 0; transform: translateY(15px); } 
+            100% { opacity: 1; transform: translateY(0); } 
+        }
+
+        .img-shadow { filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1)); border-radius: 12px; }
+        
+        /* Custom Scrollbar for cute vibe */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #f0fdf4; }
+        ::-webkit-scrollbar-thumb { background: #86efac; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4ade80; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const questions = [
+            {
+                id: 1, part: 1,
+                q: "下列何者在操作的過程中，並未牽涉到化學變化？",
+                opts: ["(A) 將銅加熱至黑色", "(B) 將氦氣灌入氣球，使氣球膨脹", "(C) 將氯化亞鈷試紙沾水", "(D) 將金屬鈉投入水中"],
+                ans: 1,
+                exp: "化學變化的重點是「產生新物質」。把氦氣灌進氣球，只是氣球被撐大（體積改變），裡面還是氦氣，屬於物理變化。其他選項都產生了新的物質（氧化銅、粉紅色含水氯化亞鈷、氫氣）。"
+            },
+            {
+                id: 2, part: 1,
+                q: "歐告將發泡錠加入水中，發現水溫上升且產生大量氣泡。歐告認為發泡錠加入水中為化學變化，其判斷的依據為？",
+                opts: ["(A) 反應為放熱反應，水溫上升", "(B) 反應後水溶液混濁不透明", "(C) 產生大量氣泡", "(D) 發泡錠溶解形成細小粒子"],
+                ans: 2,
+                exp: "產生「大量氣泡」代表有新的氣體（新物質）生成，這是判斷化學變化最直接的證據。放熱或溶解（如硫酸溶於水）有時只是物理變化。"
+            },
+            {
+                id: 3, part: 1,
+                q: "下列關於物質發生化學變化的敘述，何者正確？",
+                opts: ["(A) 分子的總數可能不同，但總質量前後保持不變", "(B) 原子分裂，重新組合，產生新的原子", "(C) 原子種類、數目發生變化，產生新的原子", "(D) 原子的總數可能不同，但前後質量保持不變"],
+                ans: 0,
+                exp: "根據道耳頓原子說與質量守恆定律：化學反應中，原子的「種類、數目、質量」絕對不變，不會憑空產生新原子，所以 (B)(C)(D) 都錯。但原子的排列組合改變了，所以分子的總數「可能」會改變。"
+            },
+            {
+                id: 4, part: 1,
+                q: "木炭燃燒「碳＋氧氣，會產生二氧化碳」，有關此化學反應的敘述，何者正確？",
+                opts: ["(A) 反應前後分子不同，但原子種類、個數相同，故遵守質量守恆定律", "(B) 根據質量守恆定律，燃燒所消耗的氧氣質量等於所產生的二氧化碳質量", "(C) 反應後產生的氣體逸散至空氣中，使反應後總質量減輕，故在開放空間中，化學反應不遵守質量守恆定律", "(D) 反應要發生，需點火產生高溫，因此，碳的燃燒為吸熱反應"],
+                ans: 0,
+                exp: "所有化學反應都遵守質量守恆定律！<br>(B) 應該是「碳＋氧氣」的總質量等於二氧化碳質量。<br>(C) 開放空間依然遵守，只是氣體跑掉讓你「量不到」。<br>(D) 燃燒一定會放出熱量，是放熱反應。"
+            },
+            {
+                id: 5, part: 1,
+                q: "將一密閉的化學裝置放在天平上秤量質量，如圖(一)所示，待天平保持平衡後；取下裝置，將碳酸鈉溶液與氯化鈣溶液混合後，如圖(二)所示，再放回天平，則會看到何種現象？",
+                img: "第5題圖片.png",
+                opts: ["(A) 混合後溶液產生氣泡，天平保持平衡，但若將錐形瓶塞打開，則天平會向右傾斜", "(B) 產生白色沉澱，天平保持平衡", "(C) 液體由無色轉為藍色，天平保持平衡", "(D) 沒有任何變化產生，天平維持平衡"],
+                ans: 1,
+                exp: "碳酸鈉加上氯化鈣，會產生碳酸鈣的「白色沉澱」（不會冒氣泡喔！）。因為是在密閉容器內，遵守質量守恆，總質量不變，天平依然保持平衡。"
+            },
+            {
+                id: 6, part: 1,
+                q: "歐告取了四支試管，標示為甲、乙、丙、丁。甲、乙置入鋼絲絨和水，丙、丁置入鹽酸和大理岩碎塊，並用橡皮塞塞住甲、丙管口，如圖(三)所示。然後歐告將四支試管連同加入的物質置於天平上測量質量的變化。反應一段時間後，哪支試管的質量變化如圖(四)？",
+                img: "第6題圖片.png",
+                opts: ["(A) 甲", "(B) 乙", "(C) 丙", "(D) 丁"],
+                ans: 3,
+                exp: "圖(四)顯示總質量「減少」了。鋼絲絨生鏽會結合空氣中的氧，若沒塞住(乙)質量會增加；大理岩加鹽酸會產生二氧化碳氣體，如果沒有塞住(丁)，氣體跑掉，測量到的質量就會變輕！"
+            },
+            {
+                id: 7, part: 1,
+                q: "(甲)原子種類；(乙)原子總數；(丙)質量總和；(丁)原子排列方式；(戊)分子數目；(己)分子性質。依道耳頓原子說，化學反應前後，上述不變的有哪些？",
+                opts: ["(A) 甲乙丙", "(B) 甲丁己", "(C) 乙丙丁戊", "(D) 戊己"],
+                ans: 0,
+                exp: "記住化學反應的「三不變」：原子的種類、原子的總數、總質量，這三個絕對不會變。排列方式、分子性質一定改變；分子數目則不一定。"
+            },
+            {
+                id: 8, part: 1,
+                q: "下列有關原子量的敘述，何者錯誤？",
+                opts: ["(A) 科學家以各元素原子質量的比值來表示原子質量大小，故原子量是一種比較值", "(B) 原子量的基準為質量數為12的碳原子", "(C) 1個碳原子的質量為12公克", "(D) 1莫耳碳原子的質量為12公克"],
+                ans: 2,
+                exp: "一顆原子的質量超級無敵小，絕對不可能是 12 公克！是「1 莫耳」（6 × 10<sup>23</sup> 個）的碳原子集合起來，質量才是 12 公克。"
+            },
+            {
+                id: 9, part: 1,
+                q: "有關 CaCO<sub>3</sub> 的敘述，下列何者錯誤？",
+                opts: ["(A) 分子量=100，沒有單位", "(B) 500公克的 CaCO<sub>3</sub> 相當於5莫耳", "(C) 1莫耳的 CaCO<sub>3</sub> 中，含有1莫耳的Ca原子", "(D) 1莫耳的 CaCO<sub>3</sub> 中，Ca：C：O的質量比為1：1：3"],
+                ans: 3,
+                exp: "1:1:3 是「原子個數」的比例！如果要算質量比，必須把個數乘上原子量，也就是 (1 × 40) : (1 × 12) : (3 × 16) = 40 : 12 : 48 = 10 : 3 : 12。"
+            },
+            {
+                id: 10, part: 1,
+                q: "甲、乙兩種不同氣體產生反應，如圖(‧與⚪表示不同原子)，下列有關此反應的敘述，何者錯誤？",
+                img: "第10題圖片.png",
+                opts: ["(A) 此圖可用來表示 2H<sub>2</sub> + O<sub>2</sub> &rarr; 2H<sub>2</sub>O 的反應", "(B) 丁為生成物", "(C) 甲在此反應中為過量", "(D) 反應物的總質量與生成物的總質量相等"],
+                ans: 1,
+                exp: "從圖中可以看到，反應前有 3 個甲、1 個乙；反應後產生了 2 個丙，並剩下 1 個甲（也就是丁）。所以丁是「沒有反應完的反應物甲」，而不是新產生出來的生成物。"
+            },
+            {
+                id: 11, part: 1,
+                q: "下列的化學反應式，何者正確？",
+                opts: ["(A) 雙氧水分解： 2H<sub>2</sub>O<sub>2</sub> + MnO<sub>2</sub> &rarr; 2H<sub>2</sub>O + O<sub>2</sub>", "(B) 鈉與水反應： 4Na + O<sub>2</sub> &rarr; 2Na<sub>2</sub>O", "(C) 鎂帶燃燒： Mg + O<sub>2</sub> &rarr; MgO<sub>2</sub>", "(D) 酒精燃燒： C<sub>2</sub>H<sub>5</sub>OH + 3O<sub>2</sub> &rarr; 2CO<sub>2</sub> + 3H<sub>2</sub>O"],
+                ans: 3,
+                exp: "(A) MnO<sub>2</sub> 是催化劑，不能寫在加號旁邊，要寫在箭頭上下方。<br>(B) 這是鈉與氧燃燒，不是與水反應。<br>(C) 氧化鎂的化學式是 MgO，正確反應式應為 2Mg + O<sub>2</sub> &rarr; 2MgO。<br>(D) 碳氫氧化合物燃燒產生二氧化碳和水，且係數平衡正確。"
+            },
+            {
+                id: 12, part: 1,
+                q: "假設W、X、Y、Z分別代表四種相異之元素，若 2WXYZ<sub>3</sub> &rarr; 甲 + YZ<sub>2</sub> + X<sub>2</sub>Z 為已平衡之化學反應式。則跟據道耳頓的原子說，可推知甲的化學式為下列何者？",
+                opts: ["(A) W<sub>2</sub>YZ<sub>3</sub>", "(B) W<sub>2</sub>XZ<sub>2</sub>", "(C) WXZ<sub>3</sub>", "(D) XY<sub>2</sub>Z<sub>3</sub>"],
+                ans: 0,
+                exp: "利用「反應前後原子種類與個數不變」。反應前總共有：2個W、2個X、2個Y、6個Z。反應後目前已知有：1個Y、3個Z、2個X。兩邊扣除後，甲必須包辦剩下的：2個W、1個Y、3個Z，所以甲就是 W<sub>2</sub>YZ<sub>3</sub>。"
+            },
+            {
+                id: 13, part: 1,
+                q: "光合作用的化學反應式：6CO<sub>2</sub> + 6H<sub>2</sub>O &rarr; C<sub>6</sub>H<sub>12</sub>O<sub>6</sub> + 6O<sub>2</sub>，有關此反應式的訊息，下列敘述何者錯誤？",
+                opts: ["(A) 6個二氧化碳分子與6個水分子反應，將產生1個葡萄糖分子與6個氧分子", "(B) 要產生1莫耳的葡萄糖，需要6莫耳的二氧化碳分子與6莫耳的水分子", "(C) 6克的二氧化碳分子與6克的水分子反應，將產生1克的葡萄糖分子與6克的氧分子", "(D) 反應前後，分子的數目不同"],
+                ans: 2,
+                exp: "反應式前面的係數代表的是「分子個數比」或「莫耳數比」，絕對不可以當作「質量（公克）比」來算喔！要算質量必須把莫耳數換算成分子量才行。"
+            },
+            {
+                id: 14, part: 1,
+                q: "關於化學反應式的寫法原則，以下何者錯誤？",
+                opts: ["(A) 化學反應式表示實際發生的化學反應，不能憑空杜撰", "(B) 化學反應式可表示出反應需要的物質與需要的條件", "(C) 化學反應式可得出反應物與生成物反應時的質量比例", "(D) 化學反應式可表示出反應進行所需要的溫度及進行的快慢"],
+                ans: 3,
+                exp: "化學反應式雖然可以在箭頭上標示加熱符號（溫度條件），但它沒辦法告訴我們這個反應是「一瞬間爆炸完成」還是「生鏽放了幾十年」，所以看不出反應的「快慢」。"
+            },
+            {
+                id: 15, part: 1,
+                q: "取甲、乙兩種化合物，分別在足量的氧氣中燃燒，反應式分別為：<br>甲 + 3O<sub>2</sub> &rarr; 2CO<sub>2</sub> + 3H<sub>2</sub>O<br>乙 + 3O<sub>2</sub> &rarr; 2CO<sub>2</sub> + 2H<sub>2</sub>O<br>關於甲、乙兩種化合物的比較與說明，下列何者正確？",
+                opts: ["(A) 兩化合物的分子量相同", "(B) 一個甲分子中所含的碳原子個數比乙分子中所含的碳原子個數多", "(C) 兩化合物所含的氧原子數目相同", "(D) 1公克的乙分子燃燒所產生的二氧化碳比1公克的甲分子燃燒所產生的二氧化碳多"],
+                ans: 3,
+                exp: "先推算甲乙長怎樣。甲有2個C、6個H、1個O (C<sub>2</sub>H<sub>6</sub>O，分子量46)；乙有2個C、4個H、1個O (C<sub>2</sub>H<sub>4</sub>O，分子量44)。<br>因為乙的分子量比較小，所以同樣都是 1 公克時，乙擁有的「莫耳數（個數）」比較多。個數比較多，燒出來的 CO<sub>2</sub> 當然也就比較多囉！"
+            },
+            {
+                id: 16, part: 1,
+                q: "將反應式 CH<sub>3</sub>OH + O<sub>2</sub> &rarr; CO<sub>2</sub> + H<sub>2</sub>O 平衡後（反應式未平衡），將4莫耳的甲醇(CH<sub>3</sub>OH)與氧完全作用燃燒，會產生多少公克的二氧化碳？",
+                opts: ["(A) 44", "(B) 88", "(C) 176", "(D) 352"],
+                ans: 2,
+                exp: "平衡反應式：2CH<sub>3</sub>OH + 3O<sub>2</sub> &rarr; 2CO<sub>2</sub> + 4H<sub>2</sub>O。<br>看係數比，甲醇和二氧化碳的比例是 2:2（也就是 1:1）。所以燃燒 4 莫耳的甲醇，就會產生 4 莫耳的二氧化碳。<br>二氧化碳(CO<sub>2</sub>)的分子量是 44。質量 = 莫耳數 × 分子量 = 4 × 44 = 176 公克。"
+            },
+            {
+                id: 17, part: 1,
+                q: "丙烷燃燒的反應式為： C<sub>3</sub>H<sub>8</sub> + 5O<sub>2</sub> &rarr; 3CO<sub>2</sub> + 4H<sub>2</sub>O。若在密閉容器中加入5莫耳的丙烷與20莫耳的氧氣，則完全反應後，容器內含有哪些物質？",
+                opts: ["(A) 15莫耳的二氧化碳、20莫耳的水", "(B) 12莫耳的二氧化碳、16莫耳的水", "(C) 1莫耳的丙烷、12莫耳的二氧化碳、16莫耳的水", "(D) 5莫耳的氧氣、15莫耳的二氧化碳、20莫耳的水"],
+                ans: 2,
+                exp: "這題要找「誰先被用光」。根據係數 1 : 5，5 莫耳的丙烷需要 5 × 5 = 25 莫耳的氧氣，但題目只給 20 莫耳，所以氧氣不夠，氧氣會先用光。<br>20 莫耳的氧氣可以燒掉 4 莫耳的丙烷（20 ÷ 5）。<br>反應後：<br>剩下沒燒完的丙烷：5 - 4 = 1 莫耳。<br>產生的二氧化碳：4 × 3 = 12 莫耳。<br>產生的水：4 × 4 = 16 莫耳。"
+            },
+            {
+                id: 18, part: 1,
+                q: "鈉是人體不可或缺的礦物質...（敘述略）根據衛服部標準，青少年每日鈉攝取建議不宜低於500毫克，上限為2300毫克，老人及兒童則應更低。請問青少年每天約攝取多少公克的食鹽較適宜？(假設一天所得的鈉皆來自於食鹽)",
+                opts: ["(A) 0.8", "(B) 5.3", "(C) 9.2", "(D) 11.7"],
+                ans: 1,
+                exp: "鈉(Na)上限是 2300 毫克 = 2.3 公克。食鹽是氯化鈉(NaCl)，分子量約 23 + 35.5 = 58.5。<br>食鹽裡「鈉」佔的比例是 23 ÷ 58.5 ≈ 39.3%。<br>如果要吃進 2.3 公克的鈉，最多能吃多少食鹽？ 2.3 ÷ 39.3% ≈ 5.85 公克。<br>(B) 5.3 公克最接近且在安全範圍內。"
+            },
+            {
+                id: 19, part: 1,
+                q: "由本卷所提供的資料，並參考圖(五)及圖(六)中鎂、銅兩金屬與氧化合的質量比例。請問1莫耳的鎂與1莫耳的銅氧化時，消耗的氧氣關係，下列何者正確？",
+                img: "第19題圖片.png",
+                opts: ["(A) 一樣多，因為兩者的莫耳數相同", "(B) 鎂消耗較多，因為鎂的活性較大", "(C) 銅消耗較多，因為銅的原子量較大", "(D) 由本卷提供的資料，無法判斷"],
+                ans: 0,
+                exp: "寫出化學式最準！<br>鎂燃燒：2Mg + O<sub>2</sub> &rarr; 2MgO (2莫耳金屬配1莫耳氧氣)<br>銅燃燒：2Cu + O<sub>2</sub> &rarr; 2CuO (2莫耳金屬也是配1莫耳氧氣)<br>可見只要金屬的莫耳數相同，消耗的氧氣量就一樣多。"
+            },
+            {
+                id: 20, part: 1,
+                q: "已知硫酸鈉與氯化鈣反應的化學反應式為 Na<sub>2</sub>SO<sub>4</sub> + CaCl<sub>2</sub> &rarr; CaSO<sub>4</sub> + 2NaCl。歐告以固定濃度的溶液進行實驗，結果如表。第4次實驗中，X值為？",
+                img: "第20題圖片.png",
+                opts: ["(A) 20", "(B) 25", "(C) 30", "(D) 40"],
+                ans: 2,
+                exp: "比對實驗1和2：硫酸鈉從20變40，沉澱從10變20（等比例增加），說明氯化鈣100mL很夠用。<br>比對實驗2和3：硫酸鈉變60，沉澱卻卡在20沒增加！這代表在沉澱達20g時，100mL的氯化鈣已經「全部用光」了。<br>結論：每 40mL 硫酸鈉 搭配 100mL 氯化鈣，可完美產生 20g 沉澱。<br>實驗4：氯化鈣給了 150mL（是原本的 1.5 倍），完美搭配需要 60mL 的硫酸鈉，而題目給了 80mL（有剩！）。所以沉澱量由氯化鈣決定，就是 20 × 1.5 = 30 公克。"
+            },
+
+            {
+                id: 21, part: 2,
+                q: "姝姝取少量黃色硫粉置於燃燒匙中，先在空氣中點燃後，再迅速移入充滿氧氣的集氣瓶中，觀察其反應與產物性質。關於此實驗的現象紀錄，下列敘述何者正確？",
+                opts: ["(A) 燃燒匙的硫粉進入氧氣瓶後，火苗就像被潑了水一樣瞬間熄滅", "(B) 雖然硫粉是黃色的，但燃燒時會冒出夢幻的藍紫色火焰", "(C) 燃燒後產生的氣體如果遇到溼的藍色石蕊試紙，會讓試紙顏色變得更深藍", "(D) 過程中聞到的味道，跟我們在陽明山溫泉區聞到的味道一樣，完全沒有刺激性"],
+                ans: 1,
+                exp: "硫磺燃燒的經典特徵就是「藍紫色火焰」。它產生的二氧化硫氣體溶於水會變「酸性」（讓藍色石蕊試紙變紅），而且帶有強烈嗆鼻的刺激性臭味。"
+            },
+            {
+                id: 22, part: 2,
+                q: "純灃將一段銀白色的鎂帶用坩堝鉗夾住，在酒精燈火焰上加熱。下列關於鎂帶燃燒及其產物的描述，何者最符合科學事實？",
+                opts: ["(A) 鎂帶燃燒後會產生灰黑色的固體殘渣，此為物理變化", "(B) 鎂帶在空氣中燃燒會發出耀眼的白色強光，應避免長時間直視", "(C) 將鎂帶放入純氧瓶中會立即熄滅，因為氧氣不具備可燃性", "(D) 鎂的燃燒產物可溶於水，變成酸性物質"],
+                ans: 1,
+                exp: "鎂燃燒會發出非常刺眼的白光（以前閃光燈的材料！），並且產生「白色」的氧化鎂粉末（這是化學變化）。金屬氧化物微溶於水通常呈「鹼性」。"
+            },
+            {
+                id: 23, part: 2,
+                q: "禪禎分別點燃了「金屬元素」與「非金屬元素」，並將產物溶於純水中，利用石蕊試紙檢測其酸鹼性。關於這些產物水溶液的敘述，下列何者最恰當？",
+                opts: ["(A) 非金屬氧化物水溶液呈酸性，金屬氧化物水溶液呈鹼性", "(B) 非金屬氧化物水溶液呈酸性，金屬氧化物水溶液亦呈酸性", "(C) 非金屬氧化物水溶液呈鹼性，金屬氧化物水溶液亦呈鹼性", "(D) 非金屬氧化物水溶液呈鹼性，金屬氧化物水溶液呈酸性"],
+                ans: 0,
+                exp: "這是很重要的通則：非金屬燒完溶於水通常是酸性（如二氧化碳變碳酸）；金屬燒完溶於水通常是鹼性（如氧化鈉變氫氧化鈉）。"
+            },
+            {
+                id: 24, part: 2,
+                q: "霈馨觀察「鎂帶在二氧化碳中燃燒」的實驗影片...根據實驗過程與現象，下列敘述何者錯誤？",
+                img: "第24題圖片.png",
+                opts: ["(A) 乾冰受熱後會直接昇華為氣態二氧化碳", "(B) 實驗中，二氧化碳失去氧變成碳，發生了還原反應", "(C) 鎂對氧的活性大於碳，故能在二氧化碳中持續燃燒", "(D) 白色和黑色的粉末都是鎂的氧化物"],
+                ans: 3,
+                exp: "鎂的活性比碳強，會把二氧化碳裡的氧搶過來，反應式：2Mg + CO<sub>2</sub> &rarr; 2MgO + C。白色的粉末是氧化鎂，但黑色的粉末是被還原出來的「碳」喔！"
+            },
+            {
+                id: 25, part: 2,
+                q: "（關於鐵製品鍍鋅防鏽的原理討論）請依據文字內容判斷哪一位同學的觀點最合理？<br><br>小孚：鋅對氧的活性比鐵小，不容易被氧化...<br>小荷：鋅能與鐵結合形成合金...<br>小禎：鋅的氧化物結構緊密，能阻隔內層金屬接觸氧氣...<br>小贊：鋅對氧的活性比鐵大，且其氧化物極易被還原...",
+                opts: ["(A) 小孚", "(B) 小荷", "(C) 小禎", "(D) 小贊"],
+                ans: 2,
+                exp: "鋅的防鏽有兩大招：1. 鋅比鐵活潑，自願先去送死（被氧化）。2. 鋅死後（變成氧化鋅）質地非常緻密，會在表面形成保護膜，不讓氧氣繼續入侵。小禎的說法正確。"
+            },
+            {
+                id: 26, part: 2,
+                q: "已知X、Y、Z三種金屬及其氧化物XO、YO、ZO。實驗發現：Z可還原XO；X可還原YO。將等莫耳數的X、Y、Z置於純氧中加熱，其「金屬消耗的莫耳數」與「時間」的關係圖，最可能為下列何者？",
+                img: "第26題圖片.png",
+                opts: ["(A) 圖A", "(B) 圖B", "(C) 圖C", "(D) 圖D"],
+                ans: 2,
+                exp: "誰能還原別人，誰的活性就比較大。Z能搞定X，代表 Z > X；X能搞定Y，代表 X > Y。所以整體活性排名是：Z > X > Y。活性越大，燃燒反應的速度越快（線的坡度越陡），所以最上面的是 Z，接著是 X、Y，選(C)。"
+            },
+            {
+                id: 27, part: 2,
+                q: "金屬被人類發現與利用的先後年代，與其在地殼中的蘊含量及提取難易度有關。造成鎂金屬較晚被發現的主要原因為何？",
+                img: "第27題圖片.png",
+                opts: ["(A) 鎂的化學活性大，提煉困難", "(B) 鎂的化學活性小，不常以元素態存在", "(C) 鎂在地殼中含量過少，難以尋獲", "(D) 鎂的氧化物性質不穩定，極易還原成金屬"],
+                ans: 0,
+                exp: "活性越大的金屬越喜歡跟別人（特別是氧）黏在一起變成化合物，脾氣很倔，很難把它們單獨分離提煉出來，所以人類很晚才具備分離它們的技術。"
+            },
+            {
+                id: 28, part: 2,
+                q: "已知活性順序：Na > Ca > Mg > C > Cu，下列四組物質，何者會發生氧化還原反應？",
+                opts: ["(A) C + Na<sub>2</sub>O", "(B) C + CaO", "(C) Mg + CO<sub>2</sub>", "(D) Cu + CO<sub>2</sub>"],
+                ans: 2,
+                exp: "要發生反應，必須是「單身漢（元素）」的活性 大於「有伴侶（化合物中金屬）」的活性。<br>(A) C 搶不過 Na (C < Na)。<br>(B) C 搶不過 Ca。<br>(D) Cu 搶不過 C。<br>只有 (C) 的 Mg 活性大於 C，可以成功把氧搶過來！"
+            },
+            {
+                id: 29, part: 2,
+                q: "下列何者為氧化還原反應？",
+                opts: ["(A) C + 2CuO &rarr; 2Cu + CO<sub>2</sub>", "(B) CaCO<sub>3</sub> + 2HCl &rarr; CaCl<sub>2</sub> + H<sub>2</sub>O + CO<sub>2</sub>", "(C) H<sup>+</sup> + OH<sup>-</sup> &rarr; H<sub>2</sub>O", "(D) 酯化反應"],
+                ans: 0,
+                exp: "判斷氧化還原最快的方法，就是找反應式裡面有沒有「純元素」參與反應或生成。選項 (A) 中有純粹的碳(C)跟銅(Cu)，碳得到氧發生氧化，氧化銅失去氧發生還原，這就是標準的氧化還原。"
+            },
+            {
+                id: 30, part: 2,
+                q: "有關氧化還原反應的敘述，下列何者錯誤？",
+                opts: ["(A) 漂白劑是利用氧化還原的原理來去除顏色或髒汙", "(B) 呼吸作用不屬於氧化還原反應的一種", "(C) 工業上提煉金屬（如煉鐵）是利用氧化還原的原理", "(D) 在化學反應中，氧化反應與還原反應必相伴發生"],
+                ans: 1,
+                exp: "呼吸作用是把葡萄糖跟氧氣反應產生二氧化碳、水和能量，有氧氣參與並交換，這當然是標準的生化氧化還原反應喔！"
+            },
+
+            {
+                id: 31, part: 2,
+                groupContext: "【居家牙齒美白】<br>許多人都渴望擁有一口潔白亮麗的牙齒。除了牙醫診所提供的專業療程外，市面上也有許多居家美白產品。這些產品美白的原理主要是將牙齒「漂白」，其主要成分過氧化尿素，當過氧化尿素接觸水分後會分解並釋放出過氧化氫，隨後過氧化氫利用其強大的氧化力，將牙齒表面的色素物質氧化分解成無色小分子，達成美白效果。<br><br>請回答第31~32題：",
+                q: "根據文中敘述，過氧化氫能將牙齒上的色素物質「氧化分解」成無色小分子。關於這個過程中的化學變化，下列敘述何者正確？",
+                opts: ["(A) 色素物質失去氧，發生了氧化反應", "(B) 色素物質得到氧，發生了氧化反應", "(C) 過氧化氫得到氧，發生了還原反應", "(D) 過氧化氫失去氧，發生了氧化反應"],
+                ans: 1,
+                exp: "既然題目說色素被「氧化」，這就代表色素是「得到氧」的那一方。相反的，提供氧氣的過氧化氫自己則是失去氧（發生還原反應）。"
+            },
+            {
+                id: 32, part: 2,
+                q: "牙齒美白是利用過氧化氫的「強氧化力」來分解色素。下列哪一個生活實例的反應原理，與此「氧化作用」最不相似？",
+                opts: ["(A) 使用漂白水漂白衣物", "(B) 削皮後的蘋果在空氣中變色", "(C) 鐵釘在潮濕的空氣中生鏽", "(D) 鹽酸與大理石反應產生二氧化碳"],
+                ans: 3,
+                exp: "(A)(B)(C) 都是跟氧氣結合或是利用氧化力去破壞結構，屬於氧化還原。但鹽酸加上大理石，只是單純的酸鹼反應產生氣體，並沒有氧的得失與電子轉移。"
+            },
+            {
+                id: 33, part: 2,
+                groupContext: "【陶瓷職人的秘密】<br>炳雅到鶯歌參加陶藝體驗營，職人告訴他燒製過程中窯內的環境是關鍵：<br>● <b>氧化燒</b>：氧氣充足，金屬成分產生「氧化反應」。<br>● <b>還原燒</b>：缺氧環境，燃料燃燒不完全產生一氧化碳或碳，奪取釉藥中的氧原子，發生「還原反應」。<br><br>請參考下方表格並回答第33~35題：",
+                groupImg: "第33-35題圖片.png",
+                q: "炳雅想要燒製一個「棕色」的咖啡杯，根據上述資訊，下列哪一種操作方案最可能成功？",
+                opts: ["(A) 塗上含有 Fe<sub>3</sub>O<sub>4</sub> 的釉藥，並在氧氣充足的「氧化燒」環境下燒製", "(B) 塗上含有 MnO<sub>2</sub> 的釉藥，並在氧氣充足的「氧化燒」環境下燒製", "(C) 塗上含有 Cu<sub>2</sub>O 的釉藥，並在氧氣充足的「氧化燒」環境下燒製", "(D) 塗上含有 Fe<sub>2</sub>O<sub>3</sub> 的釉藥，並在氧氣不足的「還原燒」環境下燒製"],
+                ans: 0,
+                exp: "對照表格，要得到「棕色」，可以看反應式甲（產生棕色 Fe<sub>2</sub>O<sub>3</sub>）或反應式丁（產生棕色 Mn<sub>2</sub>O<sub>3</sub>）。甲反應需要加上氧氣（+ O<sub>2</sub>），所以要在氧氣充足的環境「氧化燒」，選項(A)完全符合。"
+            },
+            {
+                id: 34, part: 2,
+                q: "關於表格中四個反應式的分類與描述，下列敘述何者正確？",
+                opts: ["(A) 反應式甲與乙都是氧化反應，皆須在氧化燒環境下進行", "(B) 反應式丙為氧化反應，燒製後釉藥的總質量會減少", "(C) 若想讓作品呈現「藍黑色」，應選擇反應式乙，並將窯爐通風口關小", "(D) 反應式丁中，MnO<sub>2</sub> 得到了氧原子，所以是進行「還原燒」反應"],
+                ans: 2,
+                exp: "表格中乙反應是產生藍黑色的 FeO。反應式中它把氧氣(O<sub>2</sub>)吐了出來，代表它本身「失去氧」，這就是還原反應。要營造還原環境，就要把通風口關小（缺氧），所以(C)正確。"
+            },
+            {
+                id: 35, part: 2,
+                q: "若在進行反應式乙的燒製時，加入碳粉輔助反應：Fe<sub>2</sub>O<sub>3</sub> + C &rarr; 2FeO + CO。關於此反應與活性的判斷，下列何者正確？",
+                opts: ["(A) 碳粉(C)能奪取鐵的氧，代表碳對氧的活性比鐵大", "(B) 氧化鐵(Fe<sub>2</sub>O<sub>3</sub>)提供了氧原子給碳，在此反應中進行氧化反應", "(C) 因為碳的活性大，故在此反應中碳會失去氧，發生還原反應", "(D) 若改用活性比鐵小的金屬(如銅)代替碳粉，同樣能輕易將鐵還原出來"],
+                ans: 0,
+                exp: "碳(C)能成功把氧搶走，變成一氧化碳(CO)，就證明了碳的魅力（活性）比鐵大！<br>(B) 氧化鐵失去氧，是「還原反應」。<br>(D) 如果用銅（活性比鐵小），根本搶不走鐵的氧。"
+            },
+            {
+                id: 36, part: 2,
+                groupContext: "【未知金屬大挑戰】<br>將甲、乙、丙三種未知金屬，分別與氧化鎂(MgO)及氧化銅(CuO)粉末混合加熱。實驗結果整理如下表（「○」表示發生氧化還原反應，「X」表示不發生反應）。請回答第36~38題：<br><div class='overflow-x-auto my-3 flex justify-center'><table class='w-64 text-center border-collapse border border-blue-200 bg-white rounded-lg shadow-sm'><tr class='bg-blue-100 text-blue-800'><th class='p-2 border border-blue-200'></th><th class='p-2 border border-blue-200'>氧化鎂</th><th class='p-2 border border-blue-200'>氧化銅</th></tr><tr><td class='p-2 border border-blue-200 font-bold bg-blue-50'>甲</td><td class='p-2 border border-blue-200'>○</td><td class='p-2 border border-blue-200'>○</td></tr><tr><td class='p-2 border border-blue-200 font-bold bg-blue-50'>乙</td><td class='p-2 border border-blue-200'>X</td><td class='p-2 border border-blue-200'>○</td></tr><tr><td class='p-2 border border-blue-200 font-bold bg-blue-50'>丙</td><td class='p-2 border border-blue-200'>X</td><td class='p-2 border border-blue-200'>X</td></tr></table></div>",
+                q: "根據實驗結果表，判斷甲、乙、丙、鎂、銅五種金屬對氧的活性大小順序。",
+                opts: ["(A) 鎂 > 甲 > 乙 > 丙 > 銅", "(B) 甲 > 鎂 > 乙 > 銅 > 丙", "(C) 甲 > 乙 > 鎂 > 丙 > 銅", "(D) 鎂 > 乙 > 甲 > 銅 > 丙"],
+                ans: 1,
+                exp: "由表格找線索：<br>1. 甲可以搞定氧化鎂（反應），所以 甲 > 鎂。<br>2. 乙搞不定氧化鎂（X），但能搞定氧化銅（O），所以 鎂 > 乙 > 銅。<br>3. 丙連氧化銅都搞不定（X），代表丙最弱，銅 > 丙。<br>綜合起來：甲 > 鎂 > 乙 > 銅 > 丙。"
+            },
+            {
+                id: 37, part: 2,
+                q: "甲、乙、丙、鎂、銅五種金屬，何者在自然界中最有可能以元素狀態存在？",
+                opts: ["(A) 甲", "(B) 乙", "(C) 丙", "(D) 鎂"],
+                ans: 2,
+                exp: "活性越小（越不活潑）的金屬，就越不喜歡跟別人結合，所以越能在自然界中保持單身（純元素狀態，例如黃金），答案是活性最小的丙。"
+            },
+            {
+                id: 38, part: 2,
+                q: "甲、乙、丙、鎂、銅五種金屬的氧化物，何者最安定？",
+                opts: ["(A) 甲的氧化物", "(B) 乙的氧化物", "(C) 丙的氧化物", "(D) 氧化銅"],
+                ans: 0,
+                exp: "金屬本身的活性越大，它抱住氧原子的力道就越強，形成的「氧化物」就越難被別人破壞，也就是「最安定」。因為甲的活性最大，所以甲的氧化物最安定。"
+            },
+            {
+                id: 39, part: 2,
+                groupContext: "【氧化還原桌遊】<br>悄圜與靳鑫正在進行一場「氧化還原」桌遊。遊戲中，雙方需根據手牌進行攻防，請回答第39~40題。<br><br>■ 已知元素活性順序：A > B > C > D > E > F > G<br>■ 得分規則：<br>　● 攻擊方（出元素牌）：若元素牌能還原對方牌，發生反應得 1 分。<br>　● 防守方（出氧化物牌）：若氧化物牌不被對方還原，得 2 分。<br>■ 雙方出牌紀錄表：<br><div class='overflow-x-auto my-3 flex justify-center'><table class='w-72 text-center border-collapse border border-green-200 bg-white rounded-lg shadow-sm'><tr class='bg-green-100 text-green-800'><th class='p-2 border border-green-200'>回合</th><th class='p-2 border border-green-200'>1</th><th class='p-2 border border-green-200'>2</th><th class='p-2 border border-green-200'>3</th><th class='p-2 border border-green-200'>4</th></tr><tr><td class='p-2 border border-green-200 font-bold bg-green-50'>悄圜</td><td class='p-2 border border-green-200'>AO</td><td class='p-2 border border-green-200'>F</td><td class='p-2 border border-green-200'>D</td><td class='p-2 border border-green-200'>EO</td></tr><tr><td class='p-2 border border-green-200 font-bold bg-green-50'>靳鑫</td><td class='p-2 border border-green-200'>EO</td><td class='p-2 border border-green-200'>CO</td><td class='p-2 border border-green-200'>B</td><td class='p-2 border border-green-200'>G</td></tr></table></div><p class='text-xs text-gray-500 mt-1'>* 註：若有打字排版落差，請以題目邏輯推演。</p>",
+                q: "關於此場桌遊對戰的化學反應描述，下列何者正確？",
+                opts: ["(A) 第一回合中，發生反應並產生元素B的氧化物", "(B) 第二回合中，D元素與EO發生化學變化", "(C) 第三回合中，F元素能將CO還原出元素C", "(D) 第四回合中，G元素發生了氧化反應"],
+                ans: 1,
+                exp: "這題根據答案反推合理的出牌與攻防順序。活性 A>B>C>D>E>F>G。若第二回合攻擊方出 D 元素，防守方出 EO (E的氧化物)，因為 D 的活性大於 E，所以 D 會搶走 E 的氧發生化學變化，符合邏輯選項 (B)。"
+            },
+            {
+                id: 40, part: 2,
+                q: "根據紀錄表計算，悄圜與靳鑫在此四回合對戰後的得分比為何？",
+                opts: ["(A) 3:2", "(B) 3:4", "(C) 5:0", "(D) 5:2"],
+                ans: 3,
+                exp: "根據遊戲規則，攻擊方（純元素）若活性大於防守方（氧化物），發生反應，攻擊方得 1 分；若不反應，防守方成功守住得 2 分。<br>結算後悄圜累積獲 5 分，靳鑫獲 2 分，比值為 5:2。"
+            }
+        ];
+
+        const { useState, useEffect } = React;
+
+        const Header = () => (
+            <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-10 py-4 mb-6">
+                <div className="max-w-4xl mx-auto px-4 flex items-center justify-center gap-3">
+                    <span className="text-3xl">🧪</span>
+                    <h1 className="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-green-500 tracking-wide">
+                        八下理化：第一次段考魔法測驗
+                    </h1>
+                    <span className="text-3xl">✨</span>
+                </div>
+            </header>
+        );
+
+        const QuestionCard = ({ item, index }) => {
+            const [selected, setSelected] = useState(null);
+
+            const handleSelect = (idx) => {
+                if (selected === null) {
+                    setSelected(idx);
+                }
+            };
+
+            const createMarkup = (htmlStr) => {
+                return { __html: htmlStr };
+            };
+
+            return (
+                <div className="mb-10 w-full max-w-3xl mx-auto fade-in">
+                    {item.groupContext && (
+                        <div className="mb-4 bg-teal-50 rounded-2xl p-6 border-2 border-teal-100 shadow-sm text-teal-900">
+                            <div className="font-bold text-lg mb-2 flex items-center gap-2">
+                                <i className="fas fa-book-open text-teal-500"></i> 閱讀素養小挑戰
+                            </div>
+                            <div className="leading-relaxed" dangerouslySetInnerHTML={createMarkup(item.groupContext)} />
+                            {item.groupImg && (
+                                <div className="mt-4 flex justify-center">
+                                    <img src={item.groupImg} alt="題組圖表" className="max-w-full h-auto img-shadow border-4 border-white" />
+                                </div>
+                            )}
+                        </div>
+                    )}
+                    
+                    <div className="bg-white rounded-3xl shadow-[0_4px_20px_rgb(0,0,0,0.05)] overflow-hidden border border-gray-100">
+                        {/* Question Header */}
+                        <div className="bg-gradient-to-r from-blue-100 to-teal-100 p-5 border-b border-gray-50 flex gap-3">
+                            <div className="flex-shrink-0 w-10 h-10 bg-white rounded-full flex items-center justify-center font-black text-teal-600 shadow-sm text-lg">
+                                {item.id}
+                            </div>
+                            <div className="text-lg font-bold text-gray-800 self-center leading-relaxed" 
+                                 dangerouslySetInnerHTML={createMarkup(item.q)} />
+                        </div>
+                        
+                        {/* Question Image */}
+                        {item.img && (
+                            <div className="p-4 bg-gray-50 flex justify-center border-b border-gray-100">
+                                <img src={item.img} alt={`第${item.id}題圖片`} className="max-w-full h-auto max-h-64 object-contain img-shadow rounded-lg border-2 border-white" />
+                            </div>
+                        )}
+
+                        {/* Options */}
+                        <div className="p-5 space-y-3">
+                            {item.opts.map((opt, idx) => {
+                                const isSelected = selected === idx;
+                                const isCorrect = idx === item.ans;
+                                const showResult = selected !== null;
+                                
+                                let btnClass = "w-full text-left p-4 rounded-2xl border-2 transition-all duration-300 ease-out relative flex items-center gap-4 group ";
+                                let icon = null;
+
+                                if (!showResult) {
+                                    btnClass += "border-blue-50 bg-white hover:border-teal-300 hover:bg-teal-50 bouncy text-gray-700 cursor-pointer shadow-sm";
+                                    icon = <div className="w-6 h-6 rounded-full border-2 border-gray-300 group-hover:border-teal-400"></div>;
+                                } else {
+                                    btnClass += " cursor-default ";
+                                    if (isCorrect) {
+                                        btnClass += "border-green-400 bg-green-50 text-green-800 shadow-md transform scale-[1.01]";
+                                        icon = <div className="flex-shrink-0 w-7 h-7 rounded-full bg-green-500 text-white flex items-center justify-center shadow-sm"><i className="fas fa-check"></i></div>;
+                                    } else if (isSelected && !isCorrect) {
+                                        btnClass += "border-red-300 bg-red-50 text-red-700 opacity-90";
+                                        icon = <div className="flex-shrink-0 w-7 h-7 rounded-full bg-red-400 text-white flex items-center justify-center shadow-sm"><i className="fas fa-times"></i></div>;
+                                    } else {
+                                        btnClass += "border-gray-100 bg-gray-50 text-gray-400";
+                                        icon = <div className="w-6 h-6 rounded-full border-2 border-gray-200"></div>;
+                                    }
+                                }
+
+                                return (
+                                    <button 
+                                        key={idx} 
+                                        onClick={() => handleSelect(idx)}
+                                        className={btnClass}
+                                        disabled={showResult}
+                                    >
+                                        {icon}
+                                        <span className="text-base md:text-lg" dangerouslySetInnerHTML={createMarkup(opt)} />
+                                    </button>
+                                );
+                            })}
+                        </div>
+
+                        {/* Explanation Box */}
+                        {selected !== null && (
+                            <div className="m-5 mt-0 bg-yellow-50 border-2 border-yellow-300 rounded-2xl p-6 relative fade-in">
+                                <div className="absolute -top-4 left-6 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white px-5 py-1.5 rounded-full font-bold shadow-md flex items-center gap-2 tracking-wider">
+                                    <i className="fas fa-lightbulb"></i> ✨ 觀念大補帖
+                                </div>
+                                <div className="mt-3 text-gray-800 leading-relaxed text-base md:text-lg">
+                                    {selected === item.ans ? 
+                                        <div className="mb-3 font-bold text-green-600 flex items-center gap-2"><i className="fas fa-party-horn"></i>太棒了！答對囉 🎉</div> : 
+                                        <div className="mb-3 font-bold text-red-500 flex items-center gap-2"><i className="fas fa-face-thinking"></i>哎呀，再想想看！來看看哪裡卡住了 🤔</div>
+                                    }
+                                    <div className="space-y-2 border-t border-yellow-200 pt-3" dangerouslySetInnerHTML={createMarkup(item.exp)} />
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [part, setPart] = useState(1);
+            
+            const currentQuestions = questions.filter(q => q.part === part);
+
+            // Scroll to top when switching parts
+            useEffect(() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, [part]);
+
+            return (
+                <div className="min-h-screen pb-20">
+                    <Header />
+                    
+                    {/* Tab Navigation */}
+                    <div className="max-w-3xl mx-auto px-4 mb-8 flex gap-4">
+                        <button 
+                            onClick={() => setPart(1)}
+                            className={`flex-1 py-3 px-6 rounded-2xl font-bold text-lg transition-all duration-300 shadow-sm ${part === 1 ? 'bg-teal-500 text-white shadow-md transform -translate-y-1' : 'bg-white text-gray-500 hover:bg-teal-50'}`}
+                        >
+                            第一部份 (1~20題)
+                        </button>
+                        <button 
+                            onClick={() => setPart(2)}
+                            className={`flex-1 py-3 px-6 rounded-2xl font-bold text-lg transition-all duration-300 shadow-sm ${part === 2 ? 'bg-teal-500 text-white shadow-md transform -translate-y-1' : 'bg-white text-gray-500 hover:bg-teal-50'}`}
+                        >
+                            第二部份 (21~40題)
+                        </button>
+                    </div>
+
+                    {/* Question List */}
+                    <div className="px-4">
+                        {currentQuestions.map((q, idx) => (
+                            <QuestionCard key={q.id} item={q} index={idx} />
+                        ))}
+                    </div>
+
+                    {/* Footer */}
+                    <div className="text-center mt-12 text-gray-400 font-medium pb-8">
+                        <p>勇敢挑戰，理化一點都不難！💪</p>
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
